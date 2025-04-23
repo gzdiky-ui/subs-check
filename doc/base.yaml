@@ -121,7 +121,7 @@ dns:
     enable: true
     listen: 0.0.0.0:53
     ipv6: false
-    default-nameserver: [223.5.5.5, 119.29.29.29]
+    default-nameserver: [120.196.165.24, 119.29.29.29]
     enhanced-mode: fake-ip
     fake-ip-range: 198.18.0.1/16
     use-hosts: true
@@ -136,7 +136,7 @@ proxy-groups:
     interval: 300
     url: https://gstatic.com/generate_204
     lazy: true
-    timeout: 2000
+    timeout: 1000
     max-failed-times: 3
     proxies:
       - 🙏 自动选择
@@ -166,7 +166,7 @@ proxy-groups:
     interval: 300
     url: https://gstatic.com/generate_204
     lazy: true
-    timeout: 2000
+    timeout: 1000
     max-failed-times: 3
     proxies:
       - Proxy
@@ -196,7 +196,7 @@ proxy-groups:
     interval: 300
     url: https://gstatic.com/generate_204
     lazy: true
-    timeout: 2000
+    timeout: 1000
     max-failed-times: 3
     proxies:
       - DIRECT
@@ -226,7 +226,7 @@ proxy-groups:
     interval: 300
     url: https://github.com
     lazy: true
-    timeout: 2000
+    timeout: 1000
     max-failed-times: 3
     proxies:
       - Proxy
@@ -342,10 +342,10 @@ proxy-groups:
     icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/disney-plus.png
   - name: YouTube
     type: select
-    interval: 300
+    interval: 200
     url: https://youtube.com
     lazy: true
-    timeout: 2000
+    timeout: 1000
     max-failed-times: 3
     proxies:
       - 🙏 自动选择 youtube
@@ -603,7 +603,7 @@ proxy-groups:
     lazy: true
     url: https://gstatic.com/generate_204
     disable-udp: false
-    timeout: 2000
+    timeout: 1000
     max-failed-times: 3
     use:
       - ProviderYoutube
