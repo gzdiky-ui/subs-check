@@ -9,6 +9,8 @@ type Config struct {
 	CronExpression     string   `yaml:"cron-expression"`
 	SpeedTestUrl       string   `yaml:"speed-test-url"`
 	DownloadTimeout    int      `yaml:"download-timeout"`
+	DownloadMB         int      `yaml:"download-mb"`
+	TotalSpeedLimit    int      `yaml:"total-speed-limit"`
 	MinSpeed           int      `yaml:"min-speed"`
 	Timeout            int      `yaml:"timeout"`
 	FilterRegex        string   `yaml:"filter-regex"`
@@ -42,6 +44,7 @@ type Config struct {
 	EnableWebUI        bool     `yaml:"enable-web-ui"`
 	APIKey             string   `yaml:"api-key"`
 	GithubProxy        string   `yaml:"github-proxy"`
+	CallbackScript     string   `yaml:"callback-script"`
 }
 
 var GlobalConfig = &Config{
