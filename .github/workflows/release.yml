@@ -1,9 +1,9 @@
-name: Releaser
+name: Release
 
 on:
   push:
     tags:
-      - '*'
+      - 'v*.*.*'
       
 permissions:
   contents: write

@@ -15,15 +15,18 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-var Version = "unknown"
+var Version = "dev"
 var CurrentCommit = "unknown"
 
 var TempLog string
 
 func init() {
 	// 设置依赖库日志级别
-	// 如果要深入排查协议问题，后边可能要动态调整这个参数
-	mihomoLog.SetLevel(mihomoLog.SILENT)
+	if os.Getenv("MIHOMO_DEBUG") != "" {
+		mihomoLog.SetLevel(mihomoLog.DEBUG)
+	} else {
+		mihomoLog.SetLevel(mihomoLog.SILENT)
+	}
 
 	// 获取日志级别
 	logLevel := getLogLevel()

@@ -31,10 +31,11 @@ type App struct {
 	ticker     *time.Ticker
 	done       chan struct{} // 用于结束ticker goroutine的信号
 	cron       *cron.Cron    // crontab调度器
+	version    string
 }
 
 // New 创建新的应用实例
-func New() *App {
+func New(version string) *App {
 	configPath := flag.String("f", "", "配置文件路径")
 	flag.Parse()
 
@@ -42,6 +43,7 @@ func New() *App {
 		configPath: *configPath,
 		checkChan:  make(chan struct{}),
 		done:       make(chan struct{}),
+		version:    version,
 	}
 }
 
@@ -62,7 +64,18 @@ func (app *App) Initialize() error {
 		return fmt.Errorf("初始化配置文件监听失败: %w", err)
 	}
 
-	app.interval = config.GlobalConfig.CheckInterval
+	// 从配置文件中读取代理，设置代理
+	if config.GlobalConfig.Proxy != "" {
+		os.Setenv("HTTP_PROXY", config.GlobalConfig.Proxy)
+		os.Setenv("HTTPS_PROXY", config.GlobalConfig.Proxy)
+	}
+
+	app.interval = func() int {
+		if config.GlobalConfig.CheckInterval <= 0 {
+			return 1
+		}
+		return config.GlobalConfig.CheckInterval
+	}()
 
 	if config.GlobalConfig.ListenPort != "" {
 		if err := app.initHttpServer(); err != nil {
@@ -98,8 +111,6 @@ func (app *App) Run() {
 			app.cron.Stop()
 		}
 	}()
-
-	slog.Info(fmt.Sprintf("进度展示: %v", config.GlobalConfig.PrintProgress))
 
 	// 设置初始定时器模式
 	app.setTimer()
@@ -216,7 +227,7 @@ func (app *App) triggerCheck() {
 
 // checkProxies 执行代理检测
 func (app *App) checkProxies() error {
-	slog.Info("开始检测代理")
+	slog.Info("开始准备检测代理", "进度展示", config.GlobalConfig.PrintProgress)
 
 	results, err := check.Check()
 	if err != nil {
