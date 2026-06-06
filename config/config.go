@@ -5,6 +5,9 @@ import _ "embed"
 type Config struct {
 	PrintProgress        bool     `yaml:"print-progress"`
 	Concurrent           int      `yaml:"concurrent"`
+	SpeedConcurrent      int      `yaml:"speed-concurrent"`
+	MediaConcurrent      int      `yaml:"media-concurrent"`
+	ShuffleTestOrder     bool     `yaml:"shuffle-test-order"`
 	CheckInterval        int      `yaml:"check-interval"`
 	CronExpression       string   `yaml:"cron-expression"`
 	AliveTestUrl         string   `yaml:"alive-test-url"`
@@ -14,6 +17,7 @@ type Config struct {
 	TotalSpeedLimit      int      `yaml:"total-speed-limit"`
 	MinSpeed             int      `yaml:"min-speed"`
 	Timeout              int      `yaml:"timeout"`
+	MediaCheckTimeout    int      `yaml:"media-check-timeout"`
 	FilterRegex          string   `yaml:"filter-regex"`
 	SaveMethod           string   `yaml:"save-method"`
 	WebDAVURL            string   `yaml:"webdav-url"`
@@ -33,6 +37,7 @@ type Config struct {
 	SubUrlsReTry         int      `yaml:"sub-urls-retry"`
 	SubUrlsRetryInterval int      `yaml:"sub-urls-retry-interval"`
 	SubUrlsTimeout       int      `yaml:"sub-urls-timeout"`
+	SubUrlsConcurrent    int      `yaml:"sub-urls-concurrent"`
 	SubUrlsGetUA         string   `yaml:"sub-urls-get-ua"`
 	SubUrlsRemote        []string `yaml:"sub-urls-remote"`
 	SubUrls              []string `yaml:"sub-urls"`
@@ -41,7 +46,6 @@ type Config struct {
 	MihomoApiSecret      string   `yaml:"mihomo-api-secret"`
 	ListenPort           string   `yaml:"listen-port"`
 	RenameNode           bool     `yaml:"rename-node"`
-	KeepSuccessProxies   bool     `yaml:"keep-success-proxies"`
 	OutputDir            string   `yaml:"output-dir"`
 	AppriseApiServer     string   `yaml:"apprise-api-server"`
 	RecipientUrl         []string `yaml:"recipient-url"`
@@ -62,6 +66,19 @@ type Config struct {
 	GithubProxy          string   `yaml:"github-proxy"`
 	Proxy                string   `yaml:"proxy"`
 	CallbackScript       string   `yaml:"callback-script"`
+	Filter               []string `yaml:"filter"`
+	KeepDays             int      `yaml:"keep-days"`
+	DNS                  DNSConfig `yaml:"dns"`
+}
+
+// DNSConfig controls mihomo's global resolver used by every proxy probe.
+// Leaving Enable=false keeps the historical behavior (mihomo SystemResolver, v4 only).
+type DNSConfig struct {
+	Enable                bool     `yaml:"enable"`
+	IPv6                  bool     `yaml:"ipv6"`
+	Nameserver            []string `yaml:"nameserver"`
+	ProxyServerNameserver []string `yaml:"proxy-server-nameserver"`
+	DefaultNameserver     []string `yaml:"default-nameserver"`
 }
 
 var GlobalConfig = &Config{
@@ -69,10 +86,13 @@ var GlobalConfig = &Config{
 	ListenPort:         ":8199",
 	NotifyTitle:        "🔔 节点状态更新",
 	MihomoOverwriteUrl: "http://127.0.0.1:8199/sub/ACL4SSR_Online_Full.yaml",
+	MediaCheckTimeout:  10,
 	Platforms:          []string{"openai", "youtube", "netflix", "disney", "gemini", "iprisk"},
 	DownloadMB:         20,
 	AliveTestUrl:       "http://gstatic.com/generate_204",
 	SubUrlsGetUA:       "clash.meta (https://github.com/beck-8/subs-check)",
+	SubUrlsReTry:       3,
+	SubUrlsConcurrent:  20,
 }
 
 //go:embed config.example.yaml
